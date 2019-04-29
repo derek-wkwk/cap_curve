@@ -21,21 +21,6 @@ clf= RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
             oob_score=False, random_state=0, verbose=0, warm_start=False)
 clf.fit(X_train, y_train)
 
-roc_auc_value=roc_auc_score(y_train, clf.predict_proba(X_train)[:,1])  
-fpr_rf,tpr_rf,thresholds_rf=roc_curve(y_train, clf.predict_proba(X_train)[:,1])
-
-plt.plot(fpr_rf,tpr_rf,'b', label='User Model')
-plt.plot([0, 1], [0, 1], 'r--')
-plt.xlim([0.0, 1.0])
-plt.ylim([0.0, 1.05])
-plt.xlabel('False Positive Rate')
-plt.ylabel('True Positive Rate')
-plt.title("ROC Curve. AUC ="+str(np.round(roc_auc_value,4)))
-plt.grid(True)
-plt.legend(loc = 'lower right')
-plt.savefig('ROC.png')
-plt.show()
-
 
 #CAP curve
 from matplotlib import cm
@@ -67,7 +52,6 @@ def capcurve(y_values, y_proba):
     gini_value = (sigma_model - sigma_random) / (sigma_perfect - sigma_random)
 
     fig, ax = plt.subplots(nrows = 1, ncols = 1)
-    #ax = plt.subplots(nrows = 1, ncols = 1)
     ax.plot(ideal['x'],ideal['y'], color='grey', label='Perfect Model')
     ax.plot(xx,yy, color='b', label='User Model')
     ax.plot(xx,xx, linestyle='dashed', color='r', label='Random Model')
@@ -87,3 +71,18 @@ y_pred_proba = clf.predict_proba(X=X_train)
 capcurve(y_values=y_train, y_proba=y_pred_proba[:,1])
 
 
+# ROC curve. 
+roc_auc_value=roc_auc_score(y_train, clf.predict_proba(X_train)[:,1])  
+fpr_rf,tpr_rf,thresholds_rf=roc_curve(y_train, clf.predict_proba(X_train)[:,1])
+
+plt.plot(fpr_rf,tpr_rf,'b', label='User Model')
+plt.plot([0, 1], [0, 1], 'r--')
+plt.xlim([0.0, 1.0])
+plt.ylim([0.0, 1.05])
+plt.xlabel('False Positive Rate')
+plt.ylabel('True Positive Rate')
+plt.title("ROC Curve. AUC ="+str(np.round(roc_auc_value,4)))
+plt.grid(True)
+plt.legend(loc = 'lower right')
+plt.savefig('ROC.png')
+plt.show()
